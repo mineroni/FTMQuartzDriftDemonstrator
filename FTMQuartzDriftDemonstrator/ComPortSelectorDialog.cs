@@ -2,6 +2,8 @@
 
 public partial class ComPortSelectorDialog : Form
 {
+    const int minHeightWithSavePath = 150;
+    const int minHeightWithoutSavePath = 120;
     public string SelectedComPort { get => cbComPort.SelectedItem?.ToString() ?? string.Empty; }
     public string SaveLocation { get => tbSaveFilePath.Text; }
     public ComPortSelectorDialog(string[] comPortNames)
@@ -10,6 +12,8 @@ public partial class ComPortSelectorDialog : Form
         cbComPort.Items.AddRange(comPortNames);
         if (cbComPort.Items.Count > 0)
             cbComPort.SelectedIndex = 0;
+        MinimumSize = new Size(MinimumSize.Width, minHeightWithoutSavePath);
+        Height = minHeightWithoutSavePath;
     }
 
     private void cbSaveLog_CheckedChanged(object sender, EventArgs e)
@@ -17,5 +21,34 @@ public partial class ComPortSelectorDialog : Form
         lSaveLocation.Visible = cbSaveLog.Checked;
         tbSaveFilePath.Visible = cbSaveLog.Checked;
         bBrowse.Visible = cbSaveLog.Checked;
+        MinimumSize = new Size(MinimumSize.Width, cbSaveLog.Checked ? minHeightWithSavePath : minHeightWithoutSavePath);
+        // If the window is allready bigger don't change it
+        if (Size.Height <= minHeightWithSavePath)
+            Height = cbSaveLog.Checked ? minHeightWithSavePath : minHeightWithoutSavePath;
+
+        // Set tb clear, if we don't want to save the file
+        if (!cbSaveLog.Checked)
+            tbSaveFilePath.Text = string.Empty;
+    }
+
+    private void bBrowse_Click(object sender, EventArgs e)
+    {
+        using (SaveFileDialog dialog = new())
+        {
+            dialog.Title = "Save logfile";
+            dialog.Filter = "Response log files (*.txt)|*.txt|All files (*.*)|*.*";
+            dialog.DefaultExt = "txt";
+            dialog.FileName = "response_log.txt";
+            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+                tbSaveFilePath.Text = dialog.FileName;
+        }
+    }
+
+    private void button1_Click(object sender, EventArgs e)
+    {
+        DialogResult = DialogResult.OK;
+        Close();
     }
 }

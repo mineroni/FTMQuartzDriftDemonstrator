@@ -34,6 +34,7 @@
             tbSaveFilePath = new TextBox();
             bBrowse = new Button();
             lSaveLocation = new Label();
+            bOK = new Button();
             SuspendLayout();
             // 
             // lComPort
@@ -55,9 +56,8 @@
             // 
             // cbSaveLog
             // 
-            cbSaveLog.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             cbSaveLog.AutoSize = true;
-            cbSaveLog.Location = new Point(12, 42);
+            cbSaveLog.Location = new Point(12, 38);
             cbSaveLog.Name = "cbSaveLog";
             cbSaveLog.Size = new Size(69, 19);
             cbSaveLog.TabIndex = 2;
@@ -68,7 +68,7 @@
             // tbSaveFilePath
             // 
             tbSaveFilePath.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tbSaveFilePath.Location = new Point(12, 82);
+            tbSaveFilePath.Location = new Point(12, 88);
             tbSaveFilePath.Name = "tbSaveFilePath";
             tbSaveFilePath.Size = new Size(197, 23);
             tbSaveFilePath.TabIndex = 3;
@@ -77,37 +77,49 @@
             // bBrowse
             // 
             bBrowse.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            bBrowse.Location = new Point(215, 82);
+            bBrowse.Location = new Point(215, 88);
             bBrowse.Name = "bBrowse";
             bBrowse.Size = new Size(62, 23);
             bBrowse.TabIndex = 4;
             bBrowse.Text = "Browse";
             bBrowse.UseVisualStyleBackColor = true;
             bBrowse.Visible = false;
+            bBrowse.Click += bBrowse_Click;
             // 
             // lSaveLocation
             // 
             lSaveLocation.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             lSaveLocation.AutoSize = true;
-            lSaveLocation.Location = new Point(12, 64);
+            lSaveLocation.Location = new Point(12, 70);
             lSaveLocation.Name = "lSaveLocation";
             lSaveLocation.Size = new Size(77, 15);
             lSaveLocation.TabIndex = 5;
             lSaveLocation.Text = "Save location";
             lSaveLocation.Visible = false;
             // 
+            // bOK
+            // 
+            bOK.Location = new Point(177, 35);
+            bOK.Name = "bOK";
+            bOK.Size = new Size(100, 40);
+            bOK.TabIndex = 6;
+            bOK.Text = "OK";
+            bOK.UseVisualStyleBackColor = true;
+            bOK.Click += button1_Click;
+            // 
             // ComPortSelectorDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(289, 121);
+            Controls.Add(bOK);
             Controls.Add(lSaveLocation);
             Controls.Add(bBrowse);
             Controls.Add(tbSaveFilePath);
             Controls.Add(cbSaveLog);
             Controls.Add(cbComPort);
             Controls.Add(lComPort);
-            MinimumSize = new Size(305, 160);
+            MinimumSize = new Size(305, 150);
             Name = "ComPortSelectorDialog";
             Text = "ComPortSelector";
             ResumeLayout(false);
@@ -122,5 +134,6 @@
         private TextBox tbSaveFilePath;
         private Button bBrowse;
         private Label lSaveLocation;
+        private Button bOK;
     }
 }
