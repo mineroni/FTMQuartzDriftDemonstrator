@@ -2,6 +2,8 @@
 
 public partial class ComPortSelectorDialog : Form
 {
+    //const int minHeightWithSavePath = 200;
+    //const int minHeightWithoutSavePath = 180;
     const int minHeightWithSavePath = 150;
     const int minHeightWithoutSavePath = 120;
     public string SelectedComPort { get => cbComPort.SelectedItem?.ToString() ?? string.Empty; }

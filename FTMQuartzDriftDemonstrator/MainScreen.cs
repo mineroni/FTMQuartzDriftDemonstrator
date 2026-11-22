@@ -1,22 +1,36 @@
-﻿namespace FTMQuartzDriftDemonstrator;
-using System.IO.Ports;
+﻿using System.IO.Ports;
 
-public partial class MainScreen : Form
+namespace FTMQuartzDriftDemonstrator;
+
+public partial class MainForm : Form
 {
     const string version_number = "1.0";
-    string save_path = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Temp\\FTM_Demonstrator\\logfile_{DateTime.Now:yyyy_MM_dd_HHmmss}.txt";
+    string save_path = string.Empty;
     SerialPort serialPort = new();
     StreamWriter? logWriter;
     object writeLock = new();
-    public MainScreen()
+    private ScottPlot.Plottables.DataLogger plotLogger;
+    public MainForm()
     {
         InitializeComponent();
         string? dirpath = Path.GetDirectoryName(save_path);
         if (dirpath != null && !Directory.Exists(dirpath))
             Directory.CreateDirectory(dirpath);
+        setConnectionStatus(false);
+        plotLogger = Plot.Plot.Add.DataLogger();
+        plotLogger.ViewSlide(100);
+        Plot.Plot.Axes.Bottom.TickLabelStyle.FontSize = 12;
+        Plot.Plot.Axes.Left.TickLabelStyle.FontSize = 12;
+        Plot.Plot.Axes.Bottom.Label.FontSize = 14;
+        Plot.Plot.Axes.Left.Label.FontSize = 14;
+        plotLogger.LineStyle.Width = 4;
     }
 
-    private void exitToolStripMenuItem_Click(object sender, EventArgs e) => Application.Exit();
+    private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        serialPort?.Close();
+        Application.Exit();
+    }
 
     private void connectToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -26,6 +40,8 @@ public partial class MainScreen : Form
             if (cpDialog.ShowDialog() != DialogResult.OK)
                 return;
 
+            if (save_path == string.Empty || save_path.StartsWith($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Temp\\FTM_Demonstrator"))
+                save_path = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Temp\\FTM_Demonstrator\\logfile_{DateTime.Now:yyyy_MM_dd_HHmmss}.txt";
             if (cpDialog.SaveLocation != string.Empty)
             {
                 if (Directory.Exists(Path.GetDirectoryName(cpDialog.SaveLocation)))
@@ -38,8 +54,12 @@ public partial class MainScreen : Form
                     return;
                 }
             }
-            logWriter = new StreamWriter(save_path, true) { AutoFlush = true };
-            logWriter.WriteLine($"FTM Quartz Drift Denonstrator V{version_number}");
+            lock (writeLock)
+            {
+                logWriter?.Close();
+                logWriter = new StreamWriter(save_path, true) { AutoFlush = true };
+                logWriter.WriteLine($"FTM Quartz Drift Denonstrator V{version_number}");
+            }
 
             if (!SerialPort.GetPortNames().Contains(cpDialog.SelectedComPort))
             {
@@ -73,34 +93,97 @@ public partial class MainScreen : Form
                 {
                     // No complete line received within timeout.
                 }
-                catch (InvalidOperationException)
-                {
-                    break;
-                }
-                catch (IOException)
+                catch (Exception)
                 {
                     break;
                 }
             }
         });
+        setConnectionStatus(true);
+    }
+
+    private void setConnectionStatus(bool connected)
+    {
+        openLogToolStripMenuItem.Enabled = !connected;
+        connectToolStripMenuItem.Enabled = !connected;
+        saveLogAsToolStripMenuItem.Enabled = connected;
+        closeConnectionToolStripMenuItem.Enabled = connected;
     }
 
     private void closeConnectionToolStripMenuItem_Click(object sender, EventArgs e)
     {
         if (serialPort?.IsOpen == true)
             serialPort.Close();
+        logWriter?.Close();
+        setConnectionStatus(false);
+        plotLogger.Clear();
+        Plot.Refresh();
     }
 
     private void serialDataReceived(string lineReceived)
     {
-        logWriter?.Write(lineReceived);
-        MessageBox.Show($"Line received!{lineReceived}");
-        // Show it on the graph
+        lock (writeLock)
+            logWriter?.WriteLine(lineReceived);
+
+        if (!lineReceived.StartsWith("data;"))
+            return;
+
+        MeassurementData_V1 currentMeassuremntValues;
+        try
+        {
+            currentMeassuremntValues = new(lineReceived);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"{ex.Message}\n{ex.InnerException?.Message}", "Data parsing failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+        plotLogger.Add(currentMeassuremntValues.timeSec, currentMeassuremntValues.currentQuartzDriftPPM);
+        Plot.Refresh();
     }
 
     private void openLogToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        using (OpenFileDialog dialog = new())
+        {
+            dialog.Title = "Open logfile...";
+            dialog.Filter = "Response log files (*.txt)|*.txt|All files (*.*)|*.*";
+            dialog.DefaultExt = "txt";
+            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
+            if (dialog.ShowDialog() == DialogResult.OK && File.Exists(dialog.FileName))
+            {
+                lock (writeLock)
+                {
+                    logWriter?.Close();
+                    save_path = dialog.FileName;
+                    try
+                    {
+                        using (StreamReader sr = new(save_path))
+                        {
+                            foreach (string line in sr.ReadToEnd().Split(Environment.NewLine))
+                            {
+                                if (!line.StartsWith("data;"))
+                                    continue;
+                                MeassurementData_V1 currentMeassuremntValues;
+                                try
+                                {
+                                    currentMeassuremntValues = new(line);
+                                    plotLogger.Add(currentMeassuremntValues.timeSec, currentMeassuremntValues.currentQuartzDriftPPM);
+                                }
+                                catch (Exception) { }
+                            }
+                        }
+                        Plot.Refresh();
+                    }
+                    catch (IOException ex)
+                    {
+                        MessageBox.Show($"There were no output file created yet!\n{ex.Message}", "Output file was not created!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    logWriter = new StreamWriter(save_path, true) { AutoFlush = true };
+                }
+            }
+        }
     }
 
     private void saveLogAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -113,15 +196,26 @@ public partial class MainScreen : Form
             dialog.FileName = "response_log.txt";
             dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-            if (dialog.ShowDialog() == DialogResult.OK && Directory.Exists(dialog.FileName))
+            if (dialog.ShowDialog() == DialogResult.OK && Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
             {
                 lock (writeLock)
                 {
                     logWriter?.Close();
-                    File.Copy(save_path, dialog.FileName);
+                    try
+                    {
+                        File.Copy(save_path, dialog.FileName, true);
+                    }
+                    catch (IOException ex)
+                    {
+                        MessageBox.Show($"There were no output file created yet!\n{ex.Message}", "Output file was not created!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                     logWriter = new StreamWriter(save_path, true) { AutoFlush = true };
                 }
             }
         }
     }
+
+    private void bCompOff_Click(object sender, EventArgs e) => serialPort?.WriteLine("comp_off");
+
+    private void bCompOn_Click(object sender, EventArgs e) => serialPort?.WriteLine("comp_on");
 }

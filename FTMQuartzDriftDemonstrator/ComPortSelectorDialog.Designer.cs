@@ -109,6 +109,7 @@
             // 
             // ComPortSelectorDialog
             // 
+            AcceptButton = bOK;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(289, 121);
@@ -119,8 +120,13 @@
             Controls.Add(cbSaveLog);
             Controls.Add(cbComPort);
             Controls.Add(lComPort);
+            MaximizeBox = false;
+            MdiChildrenMinimizedAnchorBottom = false;
+            MinimizeBox = false;
             MinimumSize = new Size(305, 150);
             Name = "ComPortSelectorDialog";
+            ShowIcon = false;
+            ShowInTaskbar = false;
             Text = "ComPortSelector";
             ResumeLayout(false);
             PerformLayout();
