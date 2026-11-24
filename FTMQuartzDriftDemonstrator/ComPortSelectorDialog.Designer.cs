@@ -105,13 +105,13 @@
             bOK.TabIndex = 6;
             bOK.Text = "OK";
             bOK.UseVisualStyleBackColor = true;
-            bOK.Click += button1_Click;
+            bOK.Click += bOk_Click;
             // 
             // ComPortSelectorDialog
             // 
             AcceptButton = bOK;
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(289, 121);
             Controls.Add(bOK);
             Controls.Add(lSaveLocation);

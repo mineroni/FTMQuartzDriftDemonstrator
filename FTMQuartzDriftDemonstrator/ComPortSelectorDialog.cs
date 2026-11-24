@@ -14,19 +14,21 @@ public partial class ComPortSelectorDialog : Form
         cbComPort.Items.AddRange(comPortNames);
         if (cbComPort.Items.Count > 0)
             cbComPort.SelectedIndex = 0;
-        MinimumSize = new Size(MinimumSize.Width, minHeightWithoutSavePath);
-        Height = minHeightWithoutSavePath;
+        MinimumSize = new Size(MinimumSize.Width, getDeviceSpecificDpiScalePixel(minHeightWithoutSavePath));
+        Height = MinimumSize.Height;
     }
+
+    int getDeviceSpecificDpiScalePixel(int pixel) => (int)(pixel * DeviceDpi / 96f);
 
     private void cbSaveLog_CheckedChanged(object sender, EventArgs e)
     {
         lSaveLocation.Visible = cbSaveLog.Checked;
         tbSaveFilePath.Visible = cbSaveLog.Checked;
         bBrowse.Visible = cbSaveLog.Checked;
-        MinimumSize = new Size(MinimumSize.Width, cbSaveLog.Checked ? minHeightWithSavePath : minHeightWithoutSavePath);
+        MinimumSize = new Size(MinimumSize.Width, getDeviceSpecificDpiScalePixel(cbSaveLog.Checked ? minHeightWithSavePath : minHeightWithoutSavePath));
         // If the window is allready bigger don't change it
-        if (Size.Height <= minHeightWithSavePath)
-            Height = cbSaveLog.Checked ? minHeightWithSavePath : minHeightWithoutSavePath;
+        if (Size.Height <= getDeviceSpecificDpiScalePixel(minHeightWithSavePath))
+            Height = MinimumSize.Height;
 
         // Set tb clear, if we don't want to save the file
         if (!cbSaveLog.Checked)
@@ -48,7 +50,7 @@ public partial class ComPortSelectorDialog : Form
         }
     }
 
-    private void button1_Click(object sender, EventArgs e)
+    private void bOk_Click(object sender, EventArgs e)
     {
         DialogResult = DialogResult.OK;
         Close();

@@ -37,9 +37,9 @@
             closeConnectionToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             pRight = new Panel();
-            Plot = new ScottPlot.WinForms.FormsPlot();
-            bCompOff = new Button();
             bCompOn = new Button();
+            bCompOff = new Button();
+            Plot = new ScottPlot.WinForms.FormsPlot();
             menuStrip.SuspendLayout();
             pRight.SuspendLayout();
             SuspendLayout();
@@ -108,26 +108,9 @@
             pRight.Size = new Size(150, 490);
             pRight.TabIndex = 1;
             // 
-            // Plot
-            // 
-            Plot.Dock = DockStyle.Fill;
-            Plot.Location = new Point(0, 24);
-            Plot.Name = "Plot";
-            Plot.Size = new Size(784, 490);
-            Plot.TabIndex = 2;
-            // 
-            // bCompOff
-            // 
-            bCompOff.Location = new Point(0, 446);
-            bCompOff.Name = "bCompOff";
-            bCompOff.Size = new Size(75, 40);
-            bCompOff.TabIndex = 0;
-            bCompOff.Text = "Turn off Comp";
-            bCompOff.UseVisualStyleBackColor = true;
-            bCompOff.Click += bCompOff_Click;
-            // 
             // bCompOn
             // 
+            bCompOn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             bCompOn.Location = new Point(72, 446);
             bCompOn.Name = "bCompOn";
             bCompOn.Size = new Size(75, 40);
@@ -136,10 +119,29 @@
             bCompOn.UseVisualStyleBackColor = true;
             bCompOn.Click += bCompOn_Click;
             // 
+            // bCompOff
+            // 
+            bCompOff.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            bCompOff.Location = new Point(0, 446);
+            bCompOff.Name = "bCompOff";
+            bCompOff.Size = new Size(75, 40);
+            bCompOff.TabIndex = 0;
+            bCompOff.Text = "Turn off Comp";
+            bCompOff.UseVisualStyleBackColor = true;
+            bCompOff.Click += bCompOff_Click;
+            // 
+            // Plot
+            // 
+            Plot.Dock = DockStyle.Fill;
+            Plot.Location = new Point(0, 24);
+            Plot.Name = "Plot";
+            Plot.Size = new Size(784, 490);
+            Plot.TabIndex = 2;
+            // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(934, 514);
             Controls.Add(Plot);
             Controls.Add(pRight);
