@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Numerics;
 
 namespace FTMQuartzDriftDemonstrator;
 internal class MeassurementData_V1
@@ -18,6 +19,11 @@ internal class MeassurementData_V1
     public double compPPM { get; init; }
     public int responderTempCelsius { get; init; }
     public double currentQuartzDriftPPM { get; init; }
+    public Color initiatorTempColor => getColorOfField(initiatorTempCelsius, colorFieldConnector.Temp);
+    public Color responderTempColor => getColorOfField(responderTempCelsius, colorFieldConnector.Temp);
+    public Color compPPMColor => getColorOfField(compPPM, colorFieldConnector.compValue);
+    public Color quartzDriftColor => getColorOfField(currentQuartzDriftPPM, colorFieldConnector.quartzDrift);
+    public Color rssiColor => getColorOfField(rssi, colorFieldConnector.rssi);
 
     private enum colorFieldConnector { Temp, compValue, quartzDrift, rssi}
 
@@ -27,8 +33,8 @@ internal class MeassurementData_V1
             colorFieldConnector.Temp,
             new()
             {
-                (30, Color.Green),
-                (50, Color.Yellow),
+                (45, Color.Green),
+                (65, Color.Orange),
                 (int.MaxValue, Color.Red),
             }
         },
@@ -37,7 +43,7 @@ internal class MeassurementData_V1
             new()
             {
                 (10, Color.Green),
-                (20, Color.Yellow),
+                (20, Color.Orange),
                 (int.MaxValue, Color.Red),
             }
         },
@@ -46,7 +52,7 @@ internal class MeassurementData_V1
             new()
             {
                 (2, Color.Green),
-                (4, Color.Yellow),
+                (4, Color.Orange),
                 (int.MaxValue, Color.Red),
             }
         },
@@ -55,7 +61,7 @@ internal class MeassurementData_V1
             new()
             {
                 (10, Color.Green),
-                (20, Color.Yellow),
+                (20, Color.Orange),
                 (int.MaxValue, Color.Red),
             }
         },
@@ -88,7 +94,7 @@ internal class MeassurementData_V1
         }
     }
 
-    private Color getColorOfField<T>(T value, colorFieldConnector keyOfDict)
+    private Color getColorOfField<T>(T value, colorFieldConnector keyOfDict) where T : INumber<T>
     {
         List<(int, Color)> listOfColors = colorDictionary[keyOfDict];
         if (listOfColors is null)
@@ -97,8 +103,9 @@ internal class MeassurementData_V1
         int i = 0;
         while (i < listOfColors.Count)
         {
-            if (value < listOfColors[i].Item1)
+            if (value < T.CreateChecked(listOfColors[i].Item1))
                 return listOfColors[i].Item2;
+            ++i;
         }
         return Color.Black;
     }

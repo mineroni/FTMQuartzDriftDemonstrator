@@ -37,6 +37,16 @@
             closeConnectionToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             pRight = new Panel();
+            lConnectionRSSI = new Label();
+            lConnectionRSSI_tag = new Label();
+            lResponderTemperature = new Label();
+            lResponderTemperature_tag = new Label();
+            lInitatorTemperature = new Label();
+            lInitiatorTemperature_tag = new Label();
+            lCurrentQuartzDrift = new Label();
+            lCurrentQuartzDrift_tag = new Label();
+            lCompValue = new Label();
+            lCompValue_tag = new Label();
             bCompOn = new Button();
             bCompOff = new Button();
             Plot = new ScottPlot.WinForms.FormsPlot();
@@ -100,18 +110,138 @@
             // 
             // pRight
             // 
+            pRight.Controls.Add(lConnectionRSSI);
+            pRight.Controls.Add(lConnectionRSSI_tag);
+            pRight.Controls.Add(lResponderTemperature);
+            pRight.Controls.Add(lResponderTemperature_tag);
+            pRight.Controls.Add(lInitatorTemperature);
+            pRight.Controls.Add(lInitiatorTemperature_tag);
+            pRight.Controls.Add(lCurrentQuartzDrift);
+            pRight.Controls.Add(lCurrentQuartzDrift_tag);
+            pRight.Controls.Add(lCompValue);
+            pRight.Controls.Add(lCompValue_tag);
             pRight.Controls.Add(bCompOn);
             pRight.Controls.Add(bCompOff);
             pRight.Dock = DockStyle.Right;
-            pRight.Location = new Point(784, 24);
+            pRight.Location = new Point(750, 24);
             pRight.Name = "pRight";
-            pRight.Size = new Size(150, 490);
+            pRight.Size = new Size(184, 490);
             pRight.TabIndex = 1;
+            // 
+            // lConnectionRSSI
+            // 
+            lConnectionRSSI.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lConnectionRSSI.AutoSize = true;
+            lConnectionRSSI.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            lConnectionRSSI.ForeColor = Color.Red;
+            lConnectionRSSI.Location = new Point(70, 250);
+            lConnectionRSSI.Name = "lConnectionRSSI";
+            lConnectionRSSI.Size = new Size(111, 32);
+            lConnectionRSSI.TabIndex = 11;
+            lConnectionRSSI.Text = "-00 dBm";
+            // 
+            // lConnectionRSSI_tag
+            // 
+            lConnectionRSSI_tag.AutoSize = true;
+            lConnectionRSSI_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            lConnectionRSSI_tag.Location = new Point(3, 220);
+            lConnectionRSSI_tag.Name = "lConnectionRSSI_tag";
+            lConnectionRSSI_tag.Size = new Size(128, 21);
+            lConnectionRSSI_tag.TabIndex = 10;
+            lConnectionRSSI_tag.Text = "Connection RSSI:";
+            // 
+            // lResponderTemperature
+            // 
+            lResponderTemperature.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lResponderTemperature.AutoSize = true;
+            lResponderTemperature.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            lResponderTemperature.ForeColor = Color.Red;
+            lResponderTemperature.Location = new Point(105, 180);
+            lResponderTemperature.Name = "lResponderTemperature";
+            lResponderTemperature.Size = new Size(73, 32);
+            lResponderTemperature.TabIndex = 9;
+            lResponderTemperature.Text = "00 °C";
+            // 
+            // lResponderTemperature_tag
+            // 
+            lResponderTemperature_tag.AutoSize = true;
+            lResponderTemperature_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            lResponderTemperature_tag.Location = new Point(3, 150);
+            lResponderTemperature_tag.Name = "lResponderTemperature_tag";
+            lResponderTemperature_tag.Size = new Size(178, 21);
+            lResponderTemperature_tag.TabIndex = 8;
+            lResponderTemperature_tag.Text = "Responder temperature:";
+            // 
+            // lInitatorTemperature
+            // 
+            lInitatorTemperature.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lInitatorTemperature.AutoSize = true;
+            lInitatorTemperature.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            lInitatorTemperature.ForeColor = Color.Red;
+            lInitatorTemperature.Location = new Point(105, 110);
+            lInitatorTemperature.Name = "lInitatorTemperature";
+            lInitatorTemperature.Size = new Size(73, 32);
+            lInitatorTemperature.TabIndex = 7;
+            lInitatorTemperature.Text = "00 °C";
+            // 
+            // lInitiatorTemperature_tag
+            // 
+            lInitiatorTemperature_tag.AutoSize = true;
+            lInitiatorTemperature_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            lInitiatorTemperature_tag.Location = new Point(3, 80);
+            lInitiatorTemperature_tag.Name = "lInitiatorTemperature_tag";
+            lInitiatorTemperature_tag.Size = new Size(154, 21);
+            lInitiatorTemperature_tag.TabIndex = 6;
+            lInitiatorTemperature_tag.Text = "Initiator temperature";
+            // 
+            // lCurrentQuartzDrift
+            // 
+            lCurrentQuartzDrift.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lCurrentQuartzDrift.AutoSize = true;
+            lCurrentQuartzDrift.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            lCurrentQuartzDrift.ForeColor = Color.Red;
+            lCurrentQuartzDrift.Location = new Point(55, 319);
+            lCurrentQuartzDrift.Name = "lCurrentQuartzDrift";
+            lCurrentQuartzDrift.Size = new Size(122, 32);
+            lCurrentQuartzDrift.TabIndex = 5;
+            lCurrentQuartzDrift.Text = "0.00 ppm";
+            // 
+            // lCurrentQuartzDrift_tag
+            // 
+            lCurrentQuartzDrift_tag.AutoSize = true;
+            lCurrentQuartzDrift_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            lCurrentQuartzDrift_tag.Location = new Point(3, 290);
+            lCurrentQuartzDrift_tag.Name = "lCurrentQuartzDrift_tag";
+            lCurrentQuartzDrift_tag.Size = new Size(147, 21);
+            lCurrentQuartzDrift_tag.TabIndex = 4;
+            lCurrentQuartzDrift_tag.Text = "Current quartz drift:";
+            // 
+            // lCompValue
+            // 
+            lCompValue.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lCompValue.AutoSize = true;
+            lCompValue.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            lCompValue.ForeColor = Color.Red;
+            lCompValue.Location = new Point(55, 40);
+            lCompValue.Name = "lCompValue";
+            lCompValue.Size = new Size(122, 32);
+            lCompValue.TabIndex = 3;
+            lCompValue.Text = "0.00 ppm";
+            // 
+            // lCompValue_tag
+            // 
+            lCompValue_tag.AutoSize = true;
+            lCompValue_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            lCompValue_tag.Location = new Point(3, 10);
+            lCompValue_tag.Name = "lCompValue_tag";
+            lCompValue_tag.Size = new Size(155, 21);
+            lCompValue_tag.TabIndex = 2;
+            lCompValue_tag.Text = "Compensation value:";
             // 
             // bCompOn
             // 
             bCompOn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            bCompOn.Location = new Point(72, 446);
+            bCompOn.Location = new Point(104, 446);
             bCompOn.Name = "bCompOn";
             bCompOn.Size = new Size(75, 40);
             bCompOn.TabIndex = 1;
@@ -122,7 +252,7 @@
             // bCompOff
             // 
             bCompOff.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            bCompOff.Location = new Point(0, 446);
+            bCompOff.Location = new Point(6, 446);
             bCompOff.Name = "bCompOff";
             bCompOff.Size = new Size(75, 40);
             bCompOff.TabIndex = 0;
@@ -135,7 +265,7 @@
             Plot.Dock = DockStyle.Fill;
             Plot.Location = new Point(0, 24);
             Plot.Name = "Plot";
-            Plot.Size = new Size(784, 490);
+            Plot.Size = new Size(750, 490);
             Plot.TabIndex = 2;
             // 
             // MainForm
@@ -154,6 +284,7 @@
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             pRight.ResumeLayout(false);
+            pRight.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -171,5 +302,15 @@
         private ScottPlot.WinForms.FormsPlot Plot;
         private Button bCompOn;
         private Button bCompOff;
+        private Label lCompValue_tag;
+        private Label lCompValue;
+        private Label lCurrentQuartzDrift;
+        private Label lCurrentQuartzDrift_tag;
+        private Label lResponderTemperature;
+        private Label lResponderTemperature_tag;
+        private Label lInitatorTemperature;
+        private Label lInitiatorTemperature_tag;
+        private Label lConnectionRSSI;
+        private Label lConnectionRSSI_tag;
     }
 }

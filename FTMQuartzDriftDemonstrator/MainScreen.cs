@@ -108,6 +108,8 @@ public partial class MainForm : Form
         connectToolStripMenuItem.Enabled = !connected;
         saveLogAsToolStripMenuItem.Enabled = connected;
         closeConnectionToolStripMenuItem.Enabled = connected;
+        bCompOff.Enabled = connected;
+        bCompOn.Enabled = connected;
     }
 
     private void closeConnectionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -118,6 +120,15 @@ public partial class MainForm : Form
         setConnectionStatus(false);
         plotLogger.Clear();
         Plot.Refresh();
+        lCompValue.Text = "0.00 ppm";
+        lCompValue.ForeColor = Color.Red;
+        lInitatorTemperature.Text = "0 °C";
+        lInitatorTemperature.ForeColor = Color.Red;
+        lResponderTemperature.Text = "0 °C";
+        lResponderTemperature.ForeColor = Color.Red;
+        lConnectionRSSI.Text = "0 dBm";
+        lConnectionRSSI.ForeColor = Color.Red;
+        lCurrentQuartzDrift.Text = "0.00 ppm";
     }
 
     private void serialDataReceived(string lineReceived)
@@ -128,18 +139,29 @@ public partial class MainForm : Form
         if (!lineReceived.StartsWith("data;"))
             return;
 
-        MeassurementData_V1 currentMeassuremntValues;
+        MeassurementData_V1 currentMeassurementValues;
         try
         {
-            currentMeassuremntValues = new(lineReceived);
+            currentMeassurementValues = new(lineReceived);
         }
         catch (Exception ex)
         {
             MessageBox.Show($"{ex.Message}\n{ex.InnerException?.Message}", "Data parsing failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
-        plotLogger.Add(currentMeassuremntValues.timeSec, currentMeassuremntValues.currentQuartzDriftPPM);
+        plotLogger.Add(currentMeassurementValues.timeSec, currentMeassurementValues.currentQuartzDriftPPM);
         Plot.Refresh();
+
+        lCompValue.Text = $"{currentMeassurementValues.compPPM:F2} ppm";
+        lCompValue.ForeColor = currentMeassurementValues.compPPMColor;
+        lInitatorTemperature.Text = $"{currentMeassurementValues.initiatorTempCelsius} °C";
+        lInitatorTemperature.ForeColor = currentMeassurementValues.initiatorTempColor;
+        lResponderTemperature.Text = $"{currentMeassurementValues.responderTempCelsius} °C";
+        lResponderTemperature.ForeColor = currentMeassurementValues.responderTempColor;
+        lConnectionRSSI.Text = $"{currentMeassurementValues.rssi} dBm";
+        lConnectionRSSI.ForeColor = currentMeassurementValues.rssiColor;
+        lCurrentQuartzDrift.Text = $"{currentMeassurementValues.currentQuartzDriftPPM:F2} ppm";
+        lCurrentQuartzDrift.ForeColor = currentMeassurementValues.quartzDriftColor;
     }
 
     private void openLogToolStripMenuItem_Click(object sender, EventArgs e)
