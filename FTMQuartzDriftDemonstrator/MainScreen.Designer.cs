@@ -37,6 +37,13 @@
             closeConnectionToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             pRight = new Panel();
+            lCompensationState = new Label();
+            lCompensationState_tag = new Label();
+            bReset = new Button();
+            lEstimatedRTT = new Label();
+            lEstimatedRTT_tag = new Label();
+            lEstimatedDistance = new Label();
+            lEstimatedDistance_tag = new Label();
             lConnectionRSSI = new Label();
             lConnectionRSSI_tag = new Label();
             lResponderTemperature = new Label();
@@ -110,6 +117,13 @@
             // 
             // pRight
             // 
+            pRight.Controls.Add(lCompensationState);
+            pRight.Controls.Add(lCompensationState_tag);
+            pRight.Controls.Add(bReset);
+            pRight.Controls.Add(lEstimatedRTT);
+            pRight.Controls.Add(lEstimatedRTT_tag);
+            pRight.Controls.Add(lEstimatedDistance);
+            pRight.Controls.Add(lEstimatedDistance_tag);
             pRight.Controls.Add(lConnectionRSSI);
             pRight.Controls.Add(lConnectionRSSI_tag);
             pRight.Controls.Add(lResponderTemperature);
@@ -123,48 +137,120 @@
             pRight.Controls.Add(bCompOn);
             pRight.Controls.Add(bCompOff);
             pRight.Dock = DockStyle.Right;
-            pRight.Location = new Point(750, 24);
+            pRight.Location = new Point(754, 24);
             pRight.Name = "pRight";
-            pRight.Size = new Size(184, 490);
+            pRight.Size = new Size(180, 648);
             pRight.TabIndex = 1;
+            // 
+            // lCompensationState
+            // 
+            lCompensationState.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lCompensationState.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            lCompensationState.ForeColor = Color.Red;
+            lCompensationState.Location = new Point(3, 530);
+            lCompensationState.Name = "lCompensationState";
+            lCompensationState.Size = new Size(175, 32);
+            lCompensationState.TabIndex = 18;
+            lCompensationState.Text = "OFF";
+            lCompensationState.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // lCompensationState_tag
+            // 
+            lCompensationState_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            lCompensationState_tag.Location = new Point(3, 500);
+            lCompensationState_tag.Name = "lCompensationState_tag";
+            lCompensationState_tag.Size = new Size(175, 21);
+            lCompensationState_tag.TabIndex = 17;
+            lCompensationState_tag.Text = "Compensation State";
+            // 
+            // bReset
+            // 
+            bReset.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            bReset.Location = new Point(6, 574);
+            bReset.Name = "bReset";
+            bReset.Size = new Size(169, 24);
+            bReset.TabIndex = 16;
+            bReset.Text = "Reset";
+            bReset.UseVisualStyleBackColor = true;
+            bReset.Click += bReset_Click;
+            // 
+            // lEstimatedRTT
+            // 
+            lEstimatedRTT.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lEstimatedRTT.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            lEstimatedRTT.ForeColor = Color.Red;
+            lEstimatedRTT.Location = new Point(3, 390);
+            lEstimatedRTT.Name = "lEstimatedRTT";
+            lEstimatedRTT.Size = new Size(175, 32);
+            lEstimatedRTT.TabIndex = 15;
+            lEstimatedRTT.Text = "0 ns";
+            lEstimatedRTT.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // lEstimatedRTT_tag
+            // 
+            lEstimatedRTT_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            lEstimatedRTT_tag.Location = new Point(3, 360);
+            lEstimatedRTT_tag.Name = "lEstimatedRTT_tag";
+            lEstimatedRTT_tag.Size = new Size(175, 21);
+            lEstimatedRTT_tag.TabIndex = 14;
+            lEstimatedRTT_tag.Text = "Estimated RTT:";
+            // 
+            // lEstimatedDistance
+            // 
+            lEstimatedDistance.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lEstimatedDistance.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            lEstimatedDistance.ForeColor = Color.Red;
+            lEstimatedDistance.Location = new Point(3, 320);
+            lEstimatedDistance.Name = "lEstimatedDistance";
+            lEstimatedDistance.Size = new Size(175, 32);
+            lEstimatedDistance.TabIndex = 13;
+            lEstimatedDistance.Text = "00 cm";
+            lEstimatedDistance.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // lEstimatedDistance_tag
+            // 
+            lEstimatedDistance_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            lEstimatedDistance_tag.Location = new Point(3, 290);
+            lEstimatedDistance_tag.Name = "lEstimatedDistance_tag";
+            lEstimatedDistance_tag.Size = new Size(175, 21);
+            lEstimatedDistance_tag.TabIndex = 12;
+            lEstimatedDistance_tag.Text = "Estimated distance:";
             // 
             // lConnectionRSSI
             // 
             lConnectionRSSI.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lConnectionRSSI.AutoSize = true;
             lConnectionRSSI.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
             lConnectionRSSI.ForeColor = Color.Red;
-            lConnectionRSSI.Location = new Point(70, 250);
+            lConnectionRSSI.Location = new Point(3, 250);
             lConnectionRSSI.Name = "lConnectionRSSI";
-            lConnectionRSSI.Size = new Size(111, 32);
+            lConnectionRSSI.Size = new Size(175, 32);
             lConnectionRSSI.TabIndex = 11;
             lConnectionRSSI.Text = "-00 dBm";
+            lConnectionRSSI.TextAlign = ContentAlignment.MiddleRight;
             // 
             // lConnectionRSSI_tag
             // 
-            lConnectionRSSI_tag.AutoSize = true;
             lConnectionRSSI_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
             lConnectionRSSI_tag.Location = new Point(3, 220);
             lConnectionRSSI_tag.Name = "lConnectionRSSI_tag";
-            lConnectionRSSI_tag.Size = new Size(128, 21);
+            lConnectionRSSI_tag.Size = new Size(175, 21);
             lConnectionRSSI_tag.TabIndex = 10;
             lConnectionRSSI_tag.Text = "Connection RSSI:";
             // 
             // lResponderTemperature
             // 
             lResponderTemperature.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lResponderTemperature.AutoSize = true;
             lResponderTemperature.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
             lResponderTemperature.ForeColor = Color.Red;
-            lResponderTemperature.Location = new Point(105, 180);
+            lResponderTemperature.Location = new Point(3, 180);
             lResponderTemperature.Name = "lResponderTemperature";
-            lResponderTemperature.Size = new Size(73, 32);
+            lResponderTemperature.Size = new Size(175, 32);
             lResponderTemperature.TabIndex = 9;
             lResponderTemperature.Text = "00 °C";
+            lResponderTemperature.TextAlign = ContentAlignment.MiddleRight;
             // 
             // lResponderTemperature_tag
             // 
-            lResponderTemperature_tag.AutoSize = true;
             lResponderTemperature_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
             lResponderTemperature_tag.Location = new Point(3, 150);
             lResponderTemperature_tag.Name = "lResponderTemperature_tag";
@@ -175,73 +261,70 @@
             // lInitatorTemperature
             // 
             lInitatorTemperature.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lInitatorTemperature.AutoSize = true;
             lInitatorTemperature.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
             lInitatorTemperature.ForeColor = Color.Red;
-            lInitatorTemperature.Location = new Point(105, 110);
+            lInitatorTemperature.Location = new Point(3, 110);
             lInitatorTemperature.Name = "lInitatorTemperature";
-            lInitatorTemperature.Size = new Size(73, 32);
+            lInitatorTemperature.Size = new Size(175, 32);
             lInitatorTemperature.TabIndex = 7;
             lInitatorTemperature.Text = "00 °C";
+            lInitatorTemperature.TextAlign = ContentAlignment.MiddleRight;
             // 
             // lInitiatorTemperature_tag
             // 
-            lInitiatorTemperature_tag.AutoSize = true;
             lInitiatorTemperature_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
             lInitiatorTemperature_tag.Location = new Point(3, 80);
             lInitiatorTemperature_tag.Name = "lInitiatorTemperature_tag";
-            lInitiatorTemperature_tag.Size = new Size(154, 21);
+            lInitiatorTemperature_tag.Size = new Size(175, 21);
             lInitiatorTemperature_tag.TabIndex = 6;
             lInitiatorTemperature_tag.Text = "Initiator temperature";
             // 
             // lCurrentQuartzDrift
             // 
             lCurrentQuartzDrift.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lCurrentQuartzDrift.AutoSize = true;
             lCurrentQuartzDrift.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
             lCurrentQuartzDrift.ForeColor = Color.Red;
-            lCurrentQuartzDrift.Location = new Point(55, 319);
+            lCurrentQuartzDrift.Location = new Point(3, 460);
             lCurrentQuartzDrift.Name = "lCurrentQuartzDrift";
-            lCurrentQuartzDrift.Size = new Size(122, 32);
+            lCurrentQuartzDrift.Size = new Size(175, 32);
             lCurrentQuartzDrift.TabIndex = 5;
             lCurrentQuartzDrift.Text = "0.00 ppm";
+            lCurrentQuartzDrift.TextAlign = ContentAlignment.MiddleRight;
             // 
             // lCurrentQuartzDrift_tag
             // 
-            lCurrentQuartzDrift_tag.AutoSize = true;
             lCurrentQuartzDrift_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            lCurrentQuartzDrift_tag.Location = new Point(3, 290);
+            lCurrentQuartzDrift_tag.Location = new Point(3, 430);
             lCurrentQuartzDrift_tag.Name = "lCurrentQuartzDrift_tag";
-            lCurrentQuartzDrift_tag.Size = new Size(147, 21);
+            lCurrentQuartzDrift_tag.Size = new Size(175, 21);
             lCurrentQuartzDrift_tag.TabIndex = 4;
             lCurrentQuartzDrift_tag.Text = "Current quartz drift:";
             // 
             // lCompValue
             // 
             lCompValue.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lCompValue.AutoSize = true;
             lCompValue.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
             lCompValue.ForeColor = Color.Red;
-            lCompValue.Location = new Point(55, 40);
+            lCompValue.Location = new Point(3, 40);
             lCompValue.Name = "lCompValue";
-            lCompValue.Size = new Size(122, 32);
+            lCompValue.Size = new Size(175, 32);
             lCompValue.TabIndex = 3;
             lCompValue.Text = "0.00 ppm";
+            lCompValue.TextAlign = ContentAlignment.MiddleRight;
             // 
             // lCompValue_tag
             // 
-            lCompValue_tag.AutoSize = true;
             lCompValue_tag.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
             lCompValue_tag.Location = new Point(3, 10);
             lCompValue_tag.Name = "lCompValue_tag";
-            lCompValue_tag.Size = new Size(155, 21);
+            lCompValue_tag.Size = new Size(175, 21);
             lCompValue_tag.TabIndex = 2;
             lCompValue_tag.Text = "Compensation value:";
             // 
             // bCompOn
             // 
             bCompOn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            bCompOn.Location = new Point(104, 446);
+            bCompOn.Location = new Point(100, 604);
             bCompOn.Name = "bCompOn";
             bCompOn.Size = new Size(75, 40);
             bCompOn.TabIndex = 1;
@@ -252,7 +335,7 @@
             // bCompOff
             // 
             bCompOff.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            bCompOff.Location = new Point(6, 446);
+            bCompOff.Location = new Point(6, 604);
             bCompOff.Name = "bCompOff";
             bCompOff.Size = new Size(75, 40);
             bCompOff.TabIndex = 0;
@@ -265,14 +348,14 @@
             Plot.Dock = DockStyle.Fill;
             Plot.Location = new Point(0, 24);
             Plot.Name = "Plot";
-            Plot.Size = new Size(750, 490);
+            Plot.Size = new Size(754, 648);
             Plot.TabIndex = 2;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(934, 514);
+            ClientSize = new Size(934, 672);
             Controls.Add(Plot);
             Controls.Add(pRight);
             Controls.Add(menuStrip);
@@ -284,7 +367,6 @@
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             pRight.ResumeLayout(false);
-            pRight.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -312,5 +394,12 @@
         private Label lInitiatorTemperature_tag;
         private Label lConnectionRSSI;
         private Label lConnectionRSSI_tag;
+        private Label lEstimatedDistance;
+        private Label lEstimatedDistance_tag;
+        private Label lEstimatedRTT;
+        private Label lEstimatedRTT_tag;
+        private Button bReset;
+        private Label lCompensationState;
+        private Label lCompensationState_tag;
     }
 }

@@ -27,7 +27,7 @@ internal class MeassurementData_V1
 
     private enum colorFieldConnector { Temp, compValue, quartzDrift, rssi}
 
-    Dictionary<colorFieldConnector, List<(int, Color)>> colorDictionary = new()
+    private static Dictionary<colorFieldConnector, List<(int, Color)>> colorDictionary = new()
     {
         {
             colorFieldConnector.Temp,
@@ -75,6 +75,7 @@ internal class MeassurementData_V1
             throw new ArgumentException("Invalid serial line format");
         try
         {
+            //data;28724226;6;10;83887409767429;28612659256457;28612745530208;83887496049304;8124;43;-4.603296;43;3.040762
             timeSec = ulong.Parse(lineParts[1]) / 1000000.0;
             dialogToken = uint.Parse(lineParts[2]);
             rssi = int.Parse(lineParts[3]);
@@ -94,7 +95,7 @@ internal class MeassurementData_V1
         }
     }
 
-    private Color getColorOfField<T>(T value, colorFieldConnector keyOfDict) where T : INumber<T>
+    private static Color getColorOfField<T>(T value, colorFieldConnector keyOfDict) where T : INumber<T>
     {
         List<(int, Color)> listOfColors = colorDictionary[keyOfDict];
         if (listOfColors is null)

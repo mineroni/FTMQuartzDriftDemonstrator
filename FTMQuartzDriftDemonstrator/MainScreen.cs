@@ -10,6 +10,7 @@ public partial class MainForm : Form
     StreamWriter? logWriter;
     object writeLock = new();
     private ScottPlot.Plottables.DataLogger plotLogger;
+    private bool serialConnected = false;
     public MainForm()
     {
         InitializeComponent();
@@ -78,15 +79,19 @@ public partial class MainForm : Form
         catch (Exception ex)
         {
             MessageBox.Show($"Serial connection failed!\n{ex.Message}", "Serial port could not be opened!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
         }
+        serialConnected = true;
         Task.Run(() =>
         {
-            while (serialPort.IsOpen)
+            while (serialConnected)
             {
                 try
                 {
-                    string line = serialPort.ReadLine();
+                    if (!serialPort.IsOpen)
+                        serialPort.Open();
 
+                    string line = serialPort.ReadLine();
                     Invoke(serialDataReceived, line);
                 }
                 catch (TimeoutException)
@@ -95,7 +100,8 @@ public partial class MainForm : Form
                 }
                 catch (Exception)
                 {
-                    break;
+                    Thread.Sleep(100);
+                    // Serial port closed or other error occurred.
                 }
             }
         });
@@ -108,15 +114,19 @@ public partial class MainForm : Form
         connectToolStripMenuItem.Enabled = !connected;
         saveLogAsToolStripMenuItem.Enabled = connected;
         closeConnectionToolStripMenuItem.Enabled = connected;
+        bReset.Enabled = connected;
         bCompOff.Enabled = connected;
         bCompOn.Enabled = connected;
     }
 
     private void closeConnectionToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        serialConnected = false;
         if (serialPort?.IsOpen == true)
             serialPort.Close();
-        logWriter?.Close();
+        lock (writeLock)
+            logWriter?.Close();
+
         setConnectionStatus(false);
         plotLogger.Clear();
         Plot.Refresh();
@@ -128,40 +138,83 @@ public partial class MainForm : Form
         lResponderTemperature.ForeColor = Color.Red;
         lConnectionRSSI.Text = "0 dBm";
         lConnectionRSSI.ForeColor = Color.Red;
+        lEstimatedDistance.Text = "00 cm";
+        lEstimatedDistance.ForeColor = Color.Red;
+        lEstimatedRTT.Text = "0 ns";
+        lEstimatedRTT.ForeColor = Color.Red;
         lCurrentQuartzDrift.Text = "0.00 ppm";
+        lCurrentQuartzDrift.ForeColor = Color.Red;
+        lCompensationState.Text = "OFF";
+        lCompensationState.ForeColor = Color.Red;
     }
 
     private void serialDataReceived(string lineReceived)
     {
         lock (writeLock)
-            logWriter?.WriteLine(lineReceived);
+            if (serialConnected)
+                logWriter?.WriteLine(lineReceived);
 
-        if (!lineReceived.StartsWith("data;"))
-            return;
-
-        MeassurementData_V1 currentMeassurementValues;
-        try
+        // Data measurement report messages
+        if (lineReceived.StartsWith("data;"))
         {
-            currentMeassurementValues = new(lineReceived);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"{ex.Message}\n{ex.InnerException?.Message}", "Data parsing failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return;
-        }
-        plotLogger.Add(currentMeassurementValues.timeSec, currentMeassurementValues.currentQuartzDriftPPM);
-        Plot.Refresh();
+            MeassurementData_V1 currentMeassurementValues;
+            try
+            {
+                currentMeassurementValues = new(lineReceived);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}\n{ex.InnerException?.Message}", "Data parsing failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (plotLogger.Data.Coordinates.Count > 0 && plotLogger.Data.Coordinates.Last().X > currentMeassurementValues.timeSec)
+                plotLogger.Clear();
+            plotLogger.Add(currentMeassurementValues.timeSec, currentMeassurementValues.currentQuartzDriftPPM);
+            Plot.Refresh();
 
-        lCompValue.Text = $"{currentMeassurementValues.compPPM:F2} ppm";
-        lCompValue.ForeColor = currentMeassurementValues.compPPMColor;
-        lInitatorTemperature.Text = $"{currentMeassurementValues.initiatorTempCelsius} °C";
-        lInitatorTemperature.ForeColor = currentMeassurementValues.initiatorTempColor;
-        lResponderTemperature.Text = $"{currentMeassurementValues.responderTempCelsius} °C";
-        lResponderTemperature.ForeColor = currentMeassurementValues.responderTempColor;
-        lConnectionRSSI.Text = $"{currentMeassurementValues.rssi} dBm";
-        lConnectionRSSI.ForeColor = currentMeassurementValues.rssiColor;
-        lCurrentQuartzDrift.Text = $"{currentMeassurementValues.currentQuartzDriftPPM:F2} ppm";
-        lCurrentQuartzDrift.ForeColor = currentMeassurementValues.quartzDriftColor;
+            lCompValue.Text = $"{currentMeassurementValues.compPPM:F2} ppm";
+            lCompValue.ForeColor = currentMeassurementValues.compPPMColor;
+            lInitatorTemperature.Text = $"{currentMeassurementValues.initiatorTempCelsius} °C";
+            lInitatorTemperature.ForeColor = currentMeassurementValues.initiatorTempColor;
+            lResponderTemperature.Text = $"{currentMeassurementValues.responderTempCelsius} °C";
+            lResponderTemperature.ForeColor = currentMeassurementValues.responderTempColor;
+            lConnectionRSSI.Text = $"{currentMeassurementValues.rssi} dBm";
+            lConnectionRSSI.ForeColor = currentMeassurementValues.rssiColor;
+            lCurrentQuartzDrift.Text = $"{currentMeassurementValues.currentQuartzDriftPPM:F2} ppm";
+            lCurrentQuartzDrift.ForeColor = currentMeassurementValues.quartzDriftColor;
+        }
+        // Standard FTM report messages
+        else if (lineReceived.Contains("FTM report:"))
+        {
+            FTMData_V1 currentFTMData;
+            try
+            {
+                currentFTMData = new(lineReceived);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}\n{ex.InnerException?.Message}", "Data parsing failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            lEstimatedDistance.Text = $"{currentFTMData.estimatedDistance} cm";
+            lEstimatedDistance.ForeColor = currentFTMData.estimatedDistanceColor;
+            lEstimatedRTT.Text = $"{currentFTMData.rttEstimated} ns";
+            lEstimatedRTT.ForeColor = currentFTMData.rttEstimatedColor;
+        }
+        // Uart response commands
+        else if (lineReceived.Contains("uart;"))
+        {
+            if (lineReceived.Contains("uart;comp_on"))
+            {
+                lCompensationState.Text = "ON";
+                lCompensationState.ForeColor = Color.Green;
+            }
+            else if (lineReceived.Contains("uart;comp_off"))
+            {
+                lCompensationState.Text = "OFF";
+                lCompensationState.ForeColor = Color.Red;
+            }
+        }
     }
 
     private void openLogToolStripMenuItem_Click(object sender, EventArgs e)
@@ -237,7 +290,9 @@ public partial class MainForm : Form
         }
     }
 
-    private void bCompOff_Click(object sender, EventArgs e) => serialPort?.WriteLine("comp_off");
+    private void bCompOff_Click(object sender, EventArgs e) => serialPort?.WriteLine("command;comp_off");
 
-    private void bCompOn_Click(object sender, EventArgs e) => serialPort?.WriteLine("comp_on");
+    private void bCompOn_Click(object sender, EventArgs e) => serialPort?.WriteLine("command;comp_on");
+
+    private void bReset_Click(object sender, EventArgs e) => serialPort?.WriteLine("command;reset");
 }

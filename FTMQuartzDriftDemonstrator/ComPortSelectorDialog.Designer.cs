@@ -128,6 +128,7 @@
             ShowIcon = false;
             ShowInTaskbar = false;
             Text = "ComPortSelector";
+            KeyPress += ComPortSelectorDialog_KeyPress;
             ResumeLayout(false);
             PerformLayout();
         }
