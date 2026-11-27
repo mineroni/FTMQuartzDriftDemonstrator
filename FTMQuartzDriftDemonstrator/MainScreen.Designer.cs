@@ -64,11 +64,13 @@
             tpTempGraph = new TabPage();
             tpConsoleOut = new TabPage();
             rtbConsole = new RichTextBox();
+            temperaturePlot = new ScottPlot.WinForms.FormsPlot();
             menuStrip.SuspendLayout();
             pRight.SuspendLayout();
             tabControl.SuspendLayout();
             tpQuartDrift.SuspendLayout();
             tpCompensationValue.SuspendLayout();
+            tpTempGraph.SuspendLayout();
             tpConsoleOut.SuspendLayout();
             SuspendLayout();
             // 
@@ -407,11 +409,12 @@
             // 
             // tpTempGraph
             // 
+            tpTempGraph.Controls.Add(temperaturePlot);
             tpTempGraph.Location = new Point(4, 24);
             tpTempGraph.Name = "tpTempGraph";
             tpTempGraph.Size = new Size(746, 620);
             tpTempGraph.TabIndex = 2;
-            tpTempGraph.Text = "Temperatures graph";
+            tpTempGraph.Text = "Temperature graph";
             tpTempGraph.UseVisualStyleBackColor = true;
             // 
             // tpConsoleOut
@@ -434,6 +437,14 @@
             rtbConsole.TabIndex = 0;
             rtbConsole.Text = "";
             // 
+            // temperaturePlot
+            // 
+            temperaturePlot.Dock = DockStyle.Fill;
+            temperaturePlot.Location = new Point(0, 0);
+            temperaturePlot.Name = "temperaturePlot";
+            temperaturePlot.Size = new Size(746, 620);
+            temperaturePlot.TabIndex = 0;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -453,6 +464,7 @@
             tabControl.ResumeLayout(false);
             tpQuartDrift.ResumeLayout(false);
             tpCompensationValue.ResumeLayout(false);
+            tpTempGraph.ResumeLayout(false);
             tpConsoleOut.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -495,5 +507,6 @@
         private TabPage tpTempGraph;
         private TabPage tpConsoleOut;
         private RichTextBox rtbConsole;
+        private ScottPlot.WinForms.FormsPlot temperaturePlot;
     }
 }

@@ -27,6 +27,20 @@ public partial class MainForm : Form
         quartzDriftPlot.Plot.Axes.Bottom.Label.FontSize = 14;
         quartzDriftPlot.Plot.Axes.Left.Label.FontSize = 14;
         quartzDriftPlotLogger.LineStyle.Width = 4;
+        compensationValuePlotLogger = compensationValuePlot.Plot.Add.DataLogger();
+        compensationValuePlotLogger.ViewSlide(100);
+        compensationValuePlot.Plot.Axes.Bottom.TickLabelStyle.FontSize = 12;
+        compensationValuePlot.Plot.Axes.Left.TickLabelStyle.FontSize = 12;
+        compensationValuePlot.Plot.Axes.Bottom.Label.FontSize = 14;
+        compensationValuePlot.Plot.Axes.Left.Label.FontSize = 14;
+        compensationValuePlotLogger.LineStyle.Width = 4;
+        temperaturePlotLogger = temperaturePlot.Plot.Add.DataLogger();
+        temperaturePlotLogger.ViewSlide(100);
+        temperaturePlot.Plot.Axes.Bottom.TickLabelStyle.FontSize = 12;
+        temperaturePlot.Plot.Axes.Left.TickLabelStyle.FontSize = 12;
+        temperaturePlot.Plot.Axes.Bottom.Label.FontSize = 14;
+        temperaturePlot.Plot.Axes.Left.Label.FontSize = 14;
+        temperaturePlotLogger.LineStyle.Width = 4;
     }
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -132,6 +146,11 @@ public partial class MainForm : Form
         setConnectionStatus(false);
         quartzDriftPlotLogger.Clear();
         quartzDriftPlot.Refresh();
+        compensationValuePlotLogger.Clear();
+        compensationValuePlot.Refresh();
+        temperaturePlotLogger.Clear();
+        temperaturePlot.Refresh();
+        rtbConsole.Clear();
         lCompValue.Text = "0.00 ppm";
         lCompValue.ForeColor = Color.Red;
         lInitatorTemperature.Text = "0 °C";
@@ -156,6 +175,9 @@ public partial class MainForm : Form
             if (serialConnected)
                 logWriter?.WriteLine(lineReceived);
 
+        // Write output to RTB
+        rtbConsole.AppendText(lineReceived);
+
         // Data measurement report messages
         if (lineReceived.StartsWith("data;"))
         {
@@ -169,10 +191,23 @@ public partial class MainForm : Form
                 MessageBox.Show($"{ex.Message}\n{ex.InnerException?.Message}", "Data parsing failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            // Add Quartz Drift Data to plots
             if (quartzDriftPlotLogger.Data.Coordinates.Count > 0 && quartzDriftPlotLogger.Data.Coordinates.Last().X > currentMeassurementValues.timeSec)
                 quartzDriftPlotLogger.Clear();
             quartzDriftPlotLogger.Add(currentMeassurementValues.timeSec, currentMeassurementValues.currentQuartzDriftPPM);
             quartzDriftPlot.Refresh();
+
+            // Add Compensation Drift Data to plot
+            if (compensationValuePlotLogger.Data.Coordinates.Count > 0 && compensationValuePlotLogger.Data.Coordinates.Last().X > currentMeassurementValues.timeSec)
+                compensationValuePlotLogger.Clear();
+            compensationValuePlotLogger.Add(currentMeassurementValues.timeSec, currentMeassurementValues.compPPM);
+            compensationValuePlot.Refresh();
+
+            // Add Temperature Data to plot
+            if (temperaturePlotLogger.Data.Coordinates.Count > 0 && temperaturePlotLogger.Data.Coordinates.Last().X > currentMeassurementValues.timeSec)
+                temperaturePlotLogger.Clear();
+            temperaturePlotLogger.Add(currentMeassurementValues.timeSec, currentMeassurementValues.responderTempCelsius);
+            temperaturePlot.Refresh();
 
             lCompValue.Text = $"{currentMeassurementValues.compPPM:F2} ppm";
             lCompValue.ForeColor = currentMeassurementValues.compPPMColor;
