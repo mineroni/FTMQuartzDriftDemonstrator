@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
@@ -64,7 +63,6 @@
             compensationValuePlot = new ScottPlot.WinForms.FormsPlot();
             tpTempGraph = new TabPage();
             tpConsoleOut = new TabPage();
-            contextMenuStrip1 = new ContextMenuStrip(components);
             rtbConsole = new RichTextBox();
             menuStrip.SuspendLayout();
             pRight.SuspendLayout();
@@ -179,7 +177,7 @@
             // bReset
             // 
             bReset.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            bReset.Location = new Point(6, 550);
+            bReset.Location = new Point(6, 570);
             bReset.Name = "bReset";
             bReset.Size = new Size(169, 24);
             bReset.TabIndex = 16;
@@ -337,7 +335,7 @@
             // bCompOn
             // 
             bCompOn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            bCompOn.Location = new Point(100, 604);
+            bCompOn.Location = new Point(100, 600);
             bCompOn.Name = "bCompOn";
             bCompOn.Size = new Size(75, 40);
             bCompOn.TabIndex = 1;
@@ -348,7 +346,7 @@
             // bCompOff
             // 
             bCompOff.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            bCompOff.Location = new Point(6, 604);
+            bCompOff.Location = new Point(6, 600);
             bCompOff.Name = "bCompOff";
             bCompOff.Size = new Size(75, 40);
             bCompOff.TabIndex = 0;
@@ -426,11 +424,6 @@
             tpConsoleOut.Text = "Console";
             tpConsoleOut.UseVisualStyleBackColor = true;
             // 
-            // contextMenuStrip1
-            // 
-            contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(61, 4);
-            // 
             // rtbConsole
             // 
             rtbConsole.Dock = DockStyle.Fill;
@@ -502,6 +495,5 @@
         private TabPage tpTempGraph;
         private TabPage tpConsoleOut;
         private RichTextBox rtbConsole;
-        private ContextMenuStrip contextMenuStrip1;
     }
 }
