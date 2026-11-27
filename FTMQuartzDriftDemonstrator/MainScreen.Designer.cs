@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
@@ -56,9 +57,21 @@
             lCompValue_tag = new Label();
             bCompOn = new Button();
             bCompOff = new Button();
-            Plot = new ScottPlot.WinForms.FormsPlot();
+            quartzDriftPlot = new ScottPlot.WinForms.FormsPlot();
+            tabControl = new TabControl();
+            tpQuartDrift = new TabPage();
+            tpCompensationValue = new TabPage();
+            compensationValuePlot = new ScottPlot.WinForms.FormsPlot();
+            tpTempGraph = new TabPage();
+            tpConsoleOut = new TabPage();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            rtbConsole = new RichTextBox();
             menuStrip.SuspendLayout();
             pRight.SuspendLayout();
+            tabControl.SuspendLayout();
+            tpQuartDrift.SuspendLayout();
+            tpCompensationValue.SuspendLayout();
+            tpConsoleOut.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip
@@ -166,7 +179,7 @@
             // bReset
             // 
             bReset.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            bReset.Location = new Point(6, 574);
+            bReset.Location = new Point(6, 550);
             bReset.Name = "bReset";
             bReset.Size = new Size(169, 24);
             bReset.TabIndex = 16;
@@ -343,20 +356,97 @@
             bCompOff.UseVisualStyleBackColor = true;
             bCompOff.Click += bCompOff_Click;
             // 
-            // Plot
+            // quartzDriftPlot
             // 
-            Plot.Dock = DockStyle.Fill;
-            Plot.Location = new Point(0, 24);
-            Plot.Name = "Plot";
-            Plot.Size = new Size(754, 648);
-            Plot.TabIndex = 2;
+            quartzDriftPlot.Dock = DockStyle.Fill;
+            quartzDriftPlot.Location = new Point(3, 3);
+            quartzDriftPlot.Name = "quartzDriftPlot";
+            quartzDriftPlot.Size = new Size(740, 614);
+            quartzDriftPlot.TabIndex = 2;
+            // 
+            // tabControl
+            // 
+            tabControl.Controls.Add(tpQuartDrift);
+            tabControl.Controls.Add(tpCompensationValue);
+            tabControl.Controls.Add(tpTempGraph);
+            tabControl.Controls.Add(tpConsoleOut);
+            tabControl.Dock = DockStyle.Fill;
+            tabControl.Location = new Point(0, 24);
+            tabControl.Name = "tabControl";
+            tabControl.SelectedIndex = 0;
+            tabControl.Size = new Size(754, 648);
+            tabControl.TabIndex = 3;
+            // 
+            // tpQuartDrift
+            // 
+            tpQuartDrift.Controls.Add(quartzDriftPlot);
+            tpQuartDrift.Location = new Point(4, 24);
+            tpQuartDrift.Name = "tpQuartDrift";
+            tpQuartDrift.Padding = new Padding(3);
+            tpQuartDrift.Size = new Size(746, 620);
+            tpQuartDrift.TabIndex = 0;
+            tpQuartDrift.Text = "Quartz drift graph";
+            tpQuartDrift.UseVisualStyleBackColor = true;
+            // 
+            // tpCompensationValue
+            // 
+            tpCompensationValue.Controls.Add(compensationValuePlot);
+            tpCompensationValue.Location = new Point(4, 24);
+            tpCompensationValue.Name = "tpCompensationValue";
+            tpCompensationValue.Padding = new Padding(3);
+            tpCompensationValue.Size = new Size(746, 620);
+            tpCompensationValue.TabIndex = 1;
+            tpCompensationValue.Text = "Compensation value graph";
+            tpCompensationValue.UseVisualStyleBackColor = true;
+            // 
+            // compensationValuePlot
+            // 
+            compensationValuePlot.Dock = DockStyle.Fill;
+            compensationValuePlot.Location = new Point(3, 3);
+            compensationValuePlot.Name = "compensationValuePlot";
+            compensationValuePlot.Size = new Size(740, 614);
+            compensationValuePlot.TabIndex = 0;
+            // 
+            // tpTempGraph
+            // 
+            tpTempGraph.Location = new Point(4, 24);
+            tpTempGraph.Name = "tpTempGraph";
+            tpTempGraph.Size = new Size(746, 620);
+            tpTempGraph.TabIndex = 2;
+            tpTempGraph.Text = "Temperatures graph";
+            tpTempGraph.UseVisualStyleBackColor = true;
+            // 
+            // tpConsoleOut
+            // 
+            tpConsoleOut.Controls.Add(rtbConsole);
+            tpConsoleOut.Location = new Point(4, 24);
+            tpConsoleOut.Name = "tpConsoleOut";
+            tpConsoleOut.Size = new Size(746, 620);
+            tpConsoleOut.TabIndex = 3;
+            tpConsoleOut.Text = "Console";
+            tpConsoleOut.UseVisualStyleBackColor = true;
+            // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(61, 4);
+            // 
+            // rtbConsole
+            // 
+            rtbConsole.Dock = DockStyle.Fill;
+            rtbConsole.Location = new Point(0, 0);
+            rtbConsole.Name = "rtbConsole";
+            rtbConsole.ReadOnly = true;
+            rtbConsole.Size = new Size(746, 620);
+            rtbConsole.TabIndex = 0;
+            rtbConsole.Text = "";
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(934, 672);
-            Controls.Add(Plot);
+            Controls.Add(tabControl);
             Controls.Add(pRight);
             Controls.Add(menuStrip);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -367,6 +457,10 @@
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             pRight.ResumeLayout(false);
+            tabControl.ResumeLayout(false);
+            tpQuartDrift.ResumeLayout(false);
+            tpCompensationValue.ResumeLayout(false);
+            tpConsoleOut.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -381,7 +475,7 @@
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem closeConnectionToolStripMenuItem;
         private Panel pRight;
-        private ScottPlot.WinForms.FormsPlot Plot;
+        private ScottPlot.WinForms.FormsPlot quartzDriftPlot;
         private Button bCompOn;
         private Button bCompOff;
         private Label lCompValue_tag;
@@ -401,5 +495,13 @@
         private Button bReset;
         private Label lCompensationState;
         private Label lCompensationState_tag;
+        private TabControl tabControl;
+        private TabPage tpQuartDrift;
+        private TabPage tpCompensationValue;
+        private ScottPlot.WinForms.FormsPlot compensationValuePlot;
+        private TabPage tpTempGraph;
+        private TabPage tpConsoleOut;
+        private RichTextBox rtbConsole;
+        private ContextMenuStrip contextMenuStrip1;
     }
 }

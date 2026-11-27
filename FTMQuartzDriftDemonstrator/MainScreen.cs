@@ -9,7 +9,9 @@ public partial class MainForm : Form
     SerialPort serialPort = new();
     StreamWriter? logWriter;
     object writeLock = new();
-    private ScottPlot.Plottables.DataLogger plotLogger;
+    private ScottPlot.Plottables.DataLogger quartzDriftPlotLogger;
+    private ScottPlot.Plottables.DataLogger compensationValuePlotLogger;
+    private ScottPlot.Plottables.DataLogger temperaturePlotLogger;
     private bool serialConnected = false;
     public MainForm()
     {
@@ -18,13 +20,13 @@ public partial class MainForm : Form
         if (dirpath != null && !Directory.Exists(dirpath))
             Directory.CreateDirectory(dirpath);
         setConnectionStatus(false);
-        plotLogger = Plot.Plot.Add.DataLogger();
-        plotLogger.ViewSlide(100);
-        Plot.Plot.Axes.Bottom.TickLabelStyle.FontSize = 12;
-        Plot.Plot.Axes.Left.TickLabelStyle.FontSize = 12;
-        Plot.Plot.Axes.Bottom.Label.FontSize = 14;
-        Plot.Plot.Axes.Left.Label.FontSize = 14;
-        plotLogger.LineStyle.Width = 4;
+        quartzDriftPlotLogger = quartzDriftPlot.Plot.Add.DataLogger();
+        quartzDriftPlotLogger.ViewSlide(100);
+        quartzDriftPlot.Plot.Axes.Bottom.TickLabelStyle.FontSize = 12;
+        quartzDriftPlot.Plot.Axes.Left.TickLabelStyle.FontSize = 12;
+        quartzDriftPlot.Plot.Axes.Bottom.Label.FontSize = 14;
+        quartzDriftPlot.Plot.Axes.Left.Label.FontSize = 14;
+        quartzDriftPlotLogger.LineStyle.Width = 4;
     }
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -128,8 +130,8 @@ public partial class MainForm : Form
             logWriter?.Close();
 
         setConnectionStatus(false);
-        plotLogger.Clear();
-        Plot.Refresh();
+        quartzDriftPlotLogger.Clear();
+        quartzDriftPlot.Refresh();
         lCompValue.Text = "0.00 ppm";
         lCompValue.ForeColor = Color.Red;
         lInitatorTemperature.Text = "0 °C";
@@ -167,10 +169,10 @@ public partial class MainForm : Form
                 MessageBox.Show($"{ex.Message}\n{ex.InnerException?.Message}", "Data parsing failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (plotLogger.Data.Coordinates.Count > 0 && plotLogger.Data.Coordinates.Last().X > currentMeassurementValues.timeSec)
-                plotLogger.Clear();
-            plotLogger.Add(currentMeassurementValues.timeSec, currentMeassurementValues.currentQuartzDriftPPM);
-            Plot.Refresh();
+            if (quartzDriftPlotLogger.Data.Coordinates.Count > 0 && quartzDriftPlotLogger.Data.Coordinates.Last().X > currentMeassurementValues.timeSec)
+                quartzDriftPlotLogger.Clear();
+            quartzDriftPlotLogger.Add(currentMeassurementValues.timeSec, currentMeassurementValues.currentQuartzDriftPPM);
+            quartzDriftPlot.Refresh();
 
             lCompValue.Text = $"{currentMeassurementValues.compPPM:F2} ppm";
             lCompValue.ForeColor = currentMeassurementValues.compPPMColor;
@@ -244,12 +246,12 @@ public partial class MainForm : Form
                                 try
                                 {
                                     currentMeassuremntValues = new(line);
-                                    plotLogger.Add(currentMeassuremntValues.timeSec, currentMeassuremntValues.currentQuartzDriftPPM);
+                                    quartzDriftPlotLogger.Add(currentMeassuremntValues.timeSec, currentMeassuremntValues.currentQuartzDriftPPM);
                                 }
                                 catch (Exception) { }
                             }
                         }
-                        Plot.Refresh();
+                        quartzDriftPlot.Refresh();
                     }
                     catch (IOException ex)
                     {
